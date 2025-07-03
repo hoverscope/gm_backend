@@ -6,7 +6,7 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT = 3000;
+const PORT = 6200;
 
 app.use(cors());
 app.use(express.json());
@@ -16,7 +16,7 @@ const dataDir = path.join(__dirname, 'data');
 fs.mkdir(dataDir, { recursive: true }).catch(console.error);
 
 // Setup transporter
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   host: 'smtp.hostinger.com',
   port: 587,
   secure: false,
