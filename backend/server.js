@@ -11,19 +11,12 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, '..')));
-
-// Serve index.html at root route
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
-});
-
 // Create data directory if it doesn't exist
 const dataDir = path.join(__dirname, 'data');
 fs.mkdir(dataDir, { recursive: true }).catch(console.error);
 
 // Setup transporter
-const transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransporter({
   host: 'smtp.hostinger.com',
   port: 587,
   secure: false,
@@ -66,7 +59,7 @@ async function sendConfirmationEmail(email, fullName, type) {
       : 'GreenMiles | We Have Received Your Message';
 
     const message = type === 'preregister'
-      ? `Dear ${fullName},\n\nThank you for expressing your interest in GreenMiles, your pre-registration has been received successfully.\n\nWe’ll keep you informed with the latest updates and let you know as soon as we launch.\n\nWarm regards,\nHexTech`
+      ? `Dear ${fullName},\n\nThank you for expressing your interest in GreenMiles, your pre-registration has been received successfully.\n\nWe'll keep you informed with the latest updates and let you know as soon as we launch.\n\nWarm regards,\nHexTech`
       : `Dear ${fullName},\n\nThank you for contacting GreenMiles. We have received your message and will get back to you within 1–2 business days.\n\nBest regards,\nHexTech`;
 
     const mailOptions = {
