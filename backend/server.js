@@ -66,7 +66,7 @@ async function sendConfirmationEmail(email, fullName, type) {
       : 'GreenMiles | We Have Received Your Message';
 
     const message = type === 'preregister'
-      ? `Dear ${fullName},\n\nThank you for expressing your interest in GreenMiles. Your pre-registration has been received successfully.\n\nWe’ll keep you informed with the latest updates and let you know as soon as we launch.\n\nWarm regards,\nHexTech`
+      ? `Dear ${fullName},\n\nThank you for expressing your interest in GreenMiles, your pre-registration has been received successfully.\n\nWe’ll keep you informed with the latest updates and let you know as soon as we launch.\n\nWarm regards,\nHexTech`
       : `Dear ${fullName},\n\nThank you for contacting GreenMiles. We have received your message and will get back to you within 1–2 business days.\n\nBest regards,\nHexTech`;
 
     const mailOptions = {
