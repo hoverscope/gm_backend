@@ -62,12 +62,12 @@ async function saveToFile(filename, data) {
 async function sendConfirmationEmail(email, fullName, type) {
   try {
     const subject = type === 'preregister'
-      ? 'Thank you for pre-registering!'
-      : 'Thank you for contacting us!';
+      ? 'GreenMiles | Pre-Registration Confirmation'
+      : 'GreenMiles | We Have Received Your Message';
 
     const message = type === 'preregister'
-      ? `Hi ${fullName},\n\nThank you for pre-registering!`
-      : `Hi ${fullName},\n\nThank you for your message!`;
+      ? `Dear ${fullName},\n\nThank you for expressing your interest in GreenMiles. Your pre-registration has been received successfully.\n\nWe’ll keep you informed with the latest updates and let you know as soon as we launch.\n\nWarm regards,\nHexTech`
+      : `Dear ${fullName},\n\nThank you for contacting GreenMiles. We have received your message and will get back to you within 1–2 business days.\n\nBest regards,\nHexTech`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -98,14 +98,15 @@ process.on('uncaughtException', (err) => {
 app.post('/api/preregister', async (req, res) => {
   try {
     const { fullName, email } = req.body;
-    if (!fullName || !email) {
+    const fName = fullName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+    if (!fName || !email) {
       return res.status(400).json({ success: false, message: 'Full name and email are required' });
     }
 
-    const saved = await saveToFile('preregistrations.json', { fullName, email });
+    const saved = await saveToFile('preregistrations.json', { fName, email });
 
     try {
-      await withTimeout(sendConfirmationEmail(email, fullName, 'preregister'));
+      await withTimeout(sendConfirmationEmail(email, fName, 'preregister'));
     } catch (emailErr) {
       console.error('Failed to send preregister confirmation email:', emailErr);
       // Still return success because data saved
@@ -131,14 +132,15 @@ app.post('/api/preregister', async (req, res) => {
 app.post('/api/contact', async (req, res) => {
   try {
     const { fullName, email, title, message } = req.body;
-    if (!fullName || !email || !title || !message) {
+    const fName = fullName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+    if (!fName || !email || !title || !message) {
       return res.status(400).json({ success: false, message: 'All fields are required' });
     }
 
-    const saved = await saveToFile('contacts.json', { fullName, email, title, message });
+    const saved = await saveToFile('contacts.json', { fName, email, title, message });
 
     try {
-      await sendConfirmationEmail(email, fullName, 'contact');
+      await sendConfirmationEmail(email, fName, 'contact');
     } catch (emailErr) {
       console.error('Failed to send contact confirmation email:', emailErr);
       return res.json({
